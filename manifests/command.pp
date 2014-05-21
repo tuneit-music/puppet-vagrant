@@ -38,6 +38,7 @@ define vagrant::command($command = $title, $unless = undef, $user = $::id) {
 
   exec { $exec_command:
     unless  => $exec_unless,
-    timeout => 0
+    timeout => 0,
+    require => Exec["Install vagrant"]
   }
 }

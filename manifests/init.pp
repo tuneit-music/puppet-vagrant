@@ -100,7 +100,6 @@ class vagrant($version = get_latest_vagrant_version()) {
         command => "/usr/bin/wget -O ${vagrant_source} ${base_url}/${vagrant_filename}",
         creates => $vagrant_source,
         timeout => 0,
-        before  => Package["vagrant-${version}"]
       }
     }
     windows: {
@@ -122,10 +121,10 @@ class vagrant($version = get_latest_vagrant_version()) {
     }
   }
 
-  package { "vagrant-${version}":
-    ensure   => present,
-    provider => $vagrant_provider,
-    source   => $vagrant_source
+  exec { "Install vagrant": 
+    command => "/usr/bin/dpkg -i ${vagrant_source}",
+    unless  => "/usr/bin/dpkg -s vagrant-${version}|grep ' installed'",
+    require => Exec['vagrant-download'],
   }
 
 }
