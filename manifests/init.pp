@@ -123,7 +123,7 @@ class vagrant($version = get_latest_vagrant_version()) {
 
   exec { "Install vagrant": 
     command => "/usr/bin/dpkg -i ${vagrant_source}",
-    unless  => "/usr/bin/dpkg -s vagrant-${version}|grep ' installed'",
+    unless  => "/usr/bin/test $(/usr/bin/dpkg -s vagrant|grep -E '^Version.*${version}|^Status.*installed'|wc -l) -eq 2",
     require => Exec['vagrant-download'],
   }
 
